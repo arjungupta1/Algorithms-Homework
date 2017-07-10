@@ -1,0 +1,15 @@
+//zero-indexed
+SORT-ABC(A): // A is an unsorted Doubly Linked List of Strings
+	If A.length == 0 or A.length == 1:
+		Return A //A is already sorted if it is empty or only contains one string.
+	Let temp be an Empty Linked List.
+	x = A.head
+	While x != NULL:
+		temp = x.next
+		If temp.data[0] < 'B': //If the first character in the String is 'A'
+			Delete-Node(A, temp)
+			Insert-At-Head(A, temp) //insert the node at the start of the Linked-List
+		If temp.data[0] > 'B': //If the first character in the String is 'C'
+			Delete-Node(A, temp)
+			Insert-At-Tail(A, temp)
+		x = x.next
