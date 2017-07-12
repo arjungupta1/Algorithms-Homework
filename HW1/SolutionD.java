@@ -10,7 +10,7 @@ public class SolutionD {
         int outputA, outputB, outputC;
         ArrayList<Integer> nums = new ArrayList<>();
         Scanner scan = new Scanner(System.in);
-        boolean[] lookup = new boolean[10000];
+        boolean[] lookup = new boolean[10001];
         while (scan.hasNextLine()) {
             String line = scan.nextLine();
             int num = Integer.parseInt(line);
@@ -21,10 +21,12 @@ public class SolutionD {
         outputA = outputB = outputC = 0;
         for (int a = 0; a < nums.size(); a++) {
             for (int b = a + 1; b < nums.size(); b++) {
-                if ((a * b) < 10000 && lookup[a * b]) {
-                    outputA = a;
-                    outputB = b;
-                    outputC = a * b;
+                if ((a * b) < 10000) {
+                    if (lookup[a*b]) {
+                        outputA = a;
+                        outputB = b;
+                        outputC = a * b;
+                    }
                 }
             }
         }
