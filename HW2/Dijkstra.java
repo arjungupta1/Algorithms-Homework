@@ -1,5 +1,3 @@
-import java.util.*;
-
 class Edge implements Comparable{
     private double weight;
     public Vertex from;
@@ -12,18 +10,22 @@ class Edge implements Comparable{
         this.weight = weight;
     }
 
+    //returns the source vertex
     public Vertex getFrom() {
         return this.from;
     }
 
+    // returns the destination vertex
     public Vertex getTo() {
         return this.to;
     }
 
+    // returns the edge weight
     public double getWeight() {
         return this.weight;
     }
 
+    //conveinence method to find the source and destination nodes.
     public String toString() {
         return "From: " + from.getName() + " To: " + to.getName();
     }
@@ -33,9 +35,8 @@ class Edge implements Comparable{
     /**
      * Created with the help of the DistEntry class in the HW2 PDF.
      * @param o The object to be casted to an Edge and compared
-     * @return
+     * @return integer representation of the relationship between two edges
      */
-    //Created with the help of the DistEntry in the HW2 PDF
     @Override
     public int compareTo(Object o) {
         if (!(o instanceof Edge)) return 0; //object is not actually an Edge, type check is in here rather than
@@ -47,12 +48,13 @@ class Edge implements Comparable{
 }
 
 class Vertex {
+    //Init all variables
     private String vertexName;
     private double x;
     private double y;
     private double z;
-    private double distance = Double.POSITIVE_INFINITY;
-    public Vertex pred = null;
+    private double distance = Double.POSITIVE_INFINITY; //default instead of 0 so that source vertex can have a distance of 0
+    public Vertex pred = null; //assume that initial graph is a unconnected forest
 
     public Vertex (String vertexName, double x, double y, double z) {
         this.vertexName = vertexName;
@@ -61,14 +63,18 @@ class Vertex {
         this.z = z;
     }
 
+
+    //return the name of this vertex
     String getName() {
         return this.vertexName;
     }
 
+    //returns a list of the coordinates (x, y, z) used for calculating edge  distance
     public ArrayList<Double> getCoordinates() {
         return new ArrayList<>(Arrays.asList(x, y, z));
     }
 
+    //used for changing the total distance of a vertex
     public void setDistance(Double d) {
         this.distance = d;
     }
@@ -76,6 +82,7 @@ class Vertex {
     public double getDistance() {
         return this.distance;
     }
+
 
     public void setPredecessor(Vertex p) {
         this.pred = p;
@@ -91,19 +98,15 @@ public class Dijkstra {
     /*
         Psuedocode:
             Scan the inputs into a data structure that holds the string of the vertex and the three x, y, z coordinates.
-            Calculate the distances between the source and all of the vertices
-            Initialize all distances away from vertices as a very large number (Integer.MAX_VALUE)
-            Add all vertices to the priority queue
+            Create an adjacency list of all vertices and a linked list of all the possible reachable edges
+            Initialize all distances away from vertices as a very large number
+            Add all adjacent edges of the source to the priority queue
             While the priority queue is not empty:
-                Extract the minimum value vertex
-                Get all the neighbors of the vertex
-                    //neighbors are calculated by: seeing which vertices have a distance between them of 3 or less
-                For all neighbors:
-                    Compare the shortest distances with all adjacent vertices
-                    If any distance is less than the shortest distance on the current vertex:
-                        Update the adjacent vertex shortest distance in the priority queue
-                        //keep track of the distance so far...? how??
-
+                Extract the minimum weight edge
+                If the destination has not been reached yet:
+                    Set the distance to the total distance so far, and set the predecessor to the source node
+                    Add all of the node's outgoing edges to the queue
+                Relax the edge weights so that every vertex contains the minimum distance possible for the outgoing edges
     */
 
     public HashMap<Vertex, LinkedList<Edge>> adjacencyList = new HashMap<>();
@@ -122,7 +125,6 @@ public class Dijkstra {
     }
 
     //Runs Dijkstra's algorithm
-    //updates things as needed
     public ArrayList<Vertex> calculateShortestPaths(Vertex source) {
         PriorityQueue<Edge> queue = new PriorityQueue<>();
         ArrayList<Vertex> shortestPaths = new ArrayList<>();
@@ -141,14 +143,15 @@ public class Dijkstra {
                 min.to.setDistance(min.from.getDistance() + min.getWeight());
                 min.to.setPredecessor(min.from);
             }
+
             if (!shortestPaths.contains(min.to)) {
                 shortestPaths.add(min.to);
-
             }
         }
         return shortestPaths;
     }
 
+    //conveinence method to add edges to a HashMap<Vertex, LinkedList<Edge>>
     public void addToMap(Vertex v, Edge toAdd) {
         List<Edge> lst = adjacencyList.get(v);
         if (lst == null) {
@@ -158,6 +161,7 @@ public class Dijkstra {
         lst.add(toAdd);
     }
 
+    sorts all distances by least
     public void printDistances(ArrayList<Vertex> distances) {
         if (distances.size() == 0) {
             System.out.println("Empty input... nothing to print!");
@@ -165,7 +169,7 @@ public class Dijkstra {
         Collections.sort(distances, new Comparator<Vertex>() {
             @Override
             public int compare(Vertex o1, Vertex o2) {
-                return o1.getDistance() != o2.getDistance() ? 
+                return o1.getDistance() != o2.getDistance() ?
                 (o1.getDistance() < o2.getDistance() ? -1 : 1) : 0;
             }
         });
