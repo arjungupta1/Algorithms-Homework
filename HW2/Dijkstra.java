@@ -140,7 +140,6 @@ public class Dijkstra {
                 min.to.setPredecessor(min.from);
                 queue.addAll(adjacencyList.get(min.to));
             }
-
             else if(min.to.getDistance() > min.from.getDistance() + min.getWeight()) {
 
                 min.to.setDistance(min.from.getDistance() + min.getWeight());
@@ -176,6 +175,7 @@ public class Dijkstra {
                 (o1.getDistance() < o2.getDistance() ? -1 : 1) : 0;
             }
         });
+        distances.remove(0);
         distances.remove(0); //removing the start node because it should never be printed and the distance is always zero.
         for (Vertex v : distances) {
             System.out.println(v.getName() + ":" + v.getDistance());
