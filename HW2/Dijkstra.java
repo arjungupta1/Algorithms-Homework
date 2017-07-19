@@ -1,3 +1,5 @@
+import java.util.*;
+
 class Edge implements Comparable{
     private double weight;
     public Vertex from;
@@ -129,6 +131,7 @@ public class Dijkstra {
         PriorityQueue<Edge> queue = new PriorityQueue<>();
         ArrayList<Vertex> shortestPaths = new ArrayList<>();
         source.setDistance(0.0);
+        source.setPredecessor(source);
         queue.addAll(adjacencyList.get(source));
         while (!queue.isEmpty()) {
             Edge min = queue.poll();
@@ -161,7 +164,7 @@ public class Dijkstra {
         lst.add(toAdd);
     }
 
-    sorts all distances by least
+    // sorts all distances by least
     public void printDistances(ArrayList<Vertex> distances) {
         if (distances.size() == 0) {
             System.out.println("Empty input... nothing to print!");
@@ -173,6 +176,7 @@ public class Dijkstra {
                 (o1.getDistance() < o2.getDistance() ? -1 : 1) : 0;
             }
         });
+        distances.remove(0); //removing the start node because it should never be printed and the distance is always zero.
         for (Vertex v : distances) {
             System.out.println(v.getName() + ":" + v.getDistance());
         }
@@ -205,12 +209,8 @@ public class Dijkstra {
                 if (vertexDistance <= 3) {
                     Edge e1 = new Edge(v1, v2, d.calculateEdgeDistance(v1, v2));
                     d.addToMap(v1, e1);
-
-                    if (k != 0) {
-                        Edge e2 = new Edge(v2, v1, d.calculateEdgeDistance(v2, v1));
-                       d.addToMap(v2, e2);
-
-                    }
+                    Edge e2 = new Edge(v2, v1, d.calculateEdgeDistance(v2, v1));
+                    d.addToMap(v2, e2);
                 }
             }
         }
