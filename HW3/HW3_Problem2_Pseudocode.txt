@@ -1,0 +1,28 @@
+HW3 #2 Psuedocode:
+
+//T is a Binary Tree
+Find-Biggest-BST(T):
+
+    Let max be a new empty tree
+
+    If T is null:
+        Return 0
+
+    If T.left and T.right is null:
+        Let Depth be 0
+    Else:
+        Let Depth be 1
+
+    LeftDepth = Find-Biggest-BST(T.left)
+    RightDepth = Find-Biggest-BST(T.right)
+
+    If LeftDepth == RightDepth:
+        Depth = Depth + LeftDepth
+
+    If Depth is greater than max's depth:
+        max = T
+        max.depth = Depth
+
+    Return Depth
+
+TreeDepth = (Find-Biggest-BST(T)+1)^2 - 1
